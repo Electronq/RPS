@@ -1,13 +1,71 @@
-function game(){
-    for(let gamesPlayed = 0; gamesPlayed < 5; gamesPlayed++){
-        let playerHand = window.prompt("What is your hand?")
+function game(playerSelection){
+    
+    console.log(isGameOver())
+    if(isGameOver()){
+        return;
+    } else{
         computerPlay = computerHand()
-        playRound(playerHand, computerPlay)
+        playRound(playerSelection, computerPlay)
+        updateScore()
+        if(isGameOver()){
+            const endGame = document.createElement('div');
+        endGame.textContent = `Game over! ${whoWon()}`
+        endGame.classList.add('midbold')
+
         
-        
+        restartBtn.textContent = 'Restart Game'
+        restartBtn.classList.add('restartBtn')
+
+        endGame.appendChild(restartBtn)
+        outcome.appendChild(endGame)
+        return;
+        } 
     }
-    console.log(`Game over`)
+
+
 }
+
+const pcScoreHook = document.getElementById('pcScore');
+const playerScoreHook = document.getElementById('playerScore');
+
+function updateScore(){
+    pcScoreHook.textContent = `${pcScore}`
+    playerScoreHook.textContent = `${playerScore}`
+}
+
+
+
+function isGameOver(){
+    let totalGame = gamesPlayed
+    if(totalGame === 5){
+        return true
+    }else{
+        return false
+    }
+
+}
+
+function restartGame(){
+    const allGameContainers = document.querySelector('#outcome');
+    while(allGameContainers.firstChild){
+        allGameContainers.removeChild(allGameContainers.firstChild)
+    }
+    
+    playerScore = 0;
+    pcScore = 0;
+    gamesPlayed = 0;
+    updateScore()
+}
+
+function whoWon(){
+    if(playerScore > pcScore) return 'You won!'
+    else if(pcScore > playerScore) return 'You lose!'
+    else return `It's a draw!`
+}
+
+let gamesPlayed = 0;
+let playerScore = 0;
+let pcScore = 0;
 
 
 
@@ -23,58 +81,161 @@ function computerHand(){
     }
 }
 
-let computerScore, playerScore, gamesPlayed
 
 function playRound(playerHand, computerPlay){
-    
-    
-    console.log("Computer: " + computerPlay)
-    console.log("You: " + playerHand)
+
+    const drawResult = function(){
+        const parentContainer = document.createElement('div');
+        parentContainer.classList.add('center');
+
+
+        const container = document.querySelector('#outcome')
+        const gameContainer = document.createElement('div')
+        gameContainer.classList.add('gameContainer')
+
+        const pcResult = document.createElement('div');
+        pcResult.textContent = `PC: ${computerPlay}`
+        pcResult.classList.add('leftconv')
+
+        const playerResult = document.createElement('div');
+        playerResult.textContent =`You: ${playerHand}`
+        playerResult.classList.add('rightconv')
+
+        const outcome = document.createElement('div');
+        outcome.classList.add('mid')
+        outcome.textContent = `It's a draw!`
+        
+
+        
+        container.appendChild(parentContainer);
+        parentContainer.appendChild(gameContainer);
+        gameContainer.appendChild(pcResult);
+        gameContainer.appendChild(playerResult);
+        gameContainer.appendChild(outcome)
+    }
+
+    const pcWinResult = function(){
+        const container = document.querySelector('#outcome')
+        const gameContainer = document.createElement('div')
+        gameContainer.classList.add('gameContainer')
+
+        const pcResult = document.createElement('div');
+        pcResult.textContent = `PC: ${computerPlay}`
+        pcResult.classList.add('leftconv')
+
+        const playerResult = document.createElement('div');
+        playerResult.textContent =`You: ${playerHand}`
+        playerResult.classList.add('rightconv')
+
+        const outcome = document.createElement('div');
+        outcome.classList.add('mid')
+        outcome.textContent = `You lose!`
+        
+
+        container.appendChild(gameContainer);
+        gameContainer.appendChild(pcResult);
+        gameContainer.appendChild(playerResult);
+        gameContainer.appendChild(outcome)
+    }
+
+    const playerWins = function(){
+        const container = document.querySelector('#outcome')
+        const gameContainer = document.createElement('div')
+        gameContainer.classList.add('gameContainer')
+
+        const pcResult = document.createElement('div');
+        pcResult.textContent = `PC: ${computerPlay}`
+        pcResult.classList.add('leftconv')
+
+        const playerResult = document.createElement('div');
+        playerResult.textContent =`You: ${playerHand}`
+        playerResult.classList.add('rightconv')
+
+        const outcome = document.createElement('div');
+        outcome.classList.add('mid')
+        outcome.textContent = `You win!`
+        
+
+        container.appendChild(gameContainer);
+        gameContainer.appendChild(pcResult);
+        gameContainer.appendChild(playerResult);
+        gameContainer.appendChild(outcome)
+    }
+
 
 
     if(playerHand.toLowerCase() == "rock" && computerPlay == "rock" ){
-        console.log(`Draw! Computer played ${computerPlay}`)
+        drawResult();
         
     }else if (playerHand.toLowerCase() == "rock" && computerPlay == "paper"){
-        console.log(`You LOSE! Computer played ${computerPlay}!  paper beats rock`)
-        ++computerScore
+        pcWinResult()
+        pcScore++;
+        
 
     }else if(playerHand.toLowerCase() == "rock" && computerPlay == "scissors"){
-        console.log(`You WIN! Computer played ${computerPlay}, rock beats scissors`)
-        ++playerScore
+        playerWins()
+        playerScore++;
+        
 
     }else if(playerHand.toLowerCase() == "paper" && computerPlay == "rock"){
-        console.log(`You WIN! Computer played ${computerPlay}, paper beats rock`)
-        ++playerScore
+        playerWins()
+        playerScore++;
+       
 
     }else if(playerHand.toLowerCase() == "paper" && computerPlay == "paper"){
-        console.log(`Draw! Computer played ${computerPlay}`)
+        drawResult();
         
     }else if(playerHand.toLowerCase() == "paper" && computerPlay == "scissors"){
-        console.log(`You LOSE! Computer played ${computerPlay}`)
-        ++computerScore
+        pcWinResult()
+        pcScore++;
+        
 
     }else if(playerHand.toLowerCase() == "scissors" && computerPlay == "rock"){
-        console.log(`You LOSE! Computer played ${computerPlay}`)
-        ++computerScore 
+        pcWinResult()
+        pcScore++;
+        
 
     }else if(playerHand.toLowerCase() == "scissors" && computerPlay == "paper"){
-        console.log(`You WIN! Computer played ${computerPlay}`)
-        ++playerScore
+        playerWins()
+        playerScore++;
+        
 
     }else if(playerHand.toLowerCase() == "scissors" && computerPlay == "scissors"){
-        console.log(`Draw! Computer played ${computerPlay}`)
+        drawResult();
 
     }else{
-        console.log(`Do you know how to play?`)
+        const result = document.createElement('div');
+        result.textContent ='Error: Wrong Input';
+        document.body.appendChild(result);
     }
+    gamesPlayed++
 
-    console.log(` `)
+    
 }
     
 
+const rockBtn = document.querySelector('#rock');
+const paperBtn = document.querySelector('#paper');
+const scissorsBtn = document.querySelector('#scissors');
+const restartBtn = document.createElement('button');
+
+rockBtn.addEventListener('click', () => {
+    game('rock');
+});
 
 
+paperBtn.addEventListener('click', () => {
+    game('paper');
+});
 
 
-console.log(game())
+scissorsBtn.addEventListener('click', () => {
+    game('scissors');
+
+});
+
+restartBtn.addEventListener('click', () => {
+    restartGame();
+
+})
+
